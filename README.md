@@ -55,6 +55,7 @@ resume-job-match-analyzer/
 ├── Pipfile.lock
 ├── .gitignore
 └── README.md
+```
 
 ## How to Run
 
