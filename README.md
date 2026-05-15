@@ -29,27 +29,9 @@ The project focuses on:
 - Preview extracted text from uploaded documents
 - Interactive Streamlit dashboard interface
 
-Planned improvements:
-
-- TF-IDF similarity scoring
-- Cosine similarity scoring
-- Match score visualizations
-- Missing skill charts
-- Resume version comparison
-- CSV export
-- Role category detection
-
 ## Tech Stack
 
-- Python
-- Streamlit
-- Pandas
-- scikit-learn
-- NumPy
-- Matplotlib
-- pypdf
-- python-docx
-- Pipenv
+- Python | Streamlit | Pandas | scikit-learn | NumPy | Matplotlib | pypdf | python-docx | Pipenv
 
 ## Project Structure
 
@@ -73,3 +55,13 @@ resume-job-match-analyzer/
 ├── Pipfile.lock
 ├── .gitignore
 └── README.md
+
+## How to Run
+
+```bash
+python3 -m pip install pipenv
+pipenv install
+pipenv shell
+streamlit run app.py
+```
+
