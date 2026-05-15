@@ -1,0 +1,58 @@
+skill,category
+html,frontend
+css,frontend
+javascript,frontend
+typescript,frontend
+react,frontend
+angular,frontend
+rxjs,frontend
+scss,frontend
+tailwind css,frontend
+responsive design,frontend
+wcag,frontend
+java,backend
+spring boot,backend
+node.js,backend
+node,backend
+express,backend
+python,data
+flask,backend
+django,backend
+c#,software
+c,software
+sql,database
+postgresql,database
+mysql,database
+mongodb,database
+rest api,backend
+rest apis,backend
+api,backend
+json,backend
+microservices,backend
+authentication,security
+jwt,security
+cors,security
+gcp,cloud
+aws,cloud
+azure,cloud
+docker,devops
+kubernetes,devops
+ci/cd,devops
+git,tools
+github,tools
+agile,process
+waterfall,process
+data structures,software
+machine learning,data
+nlp,data
+tf-idf,data
+scikit-learn,data
+pandas,data
+numpy,data
+matplotlib,data
+c++,software
+visual basic,software
+php,backend
+.net,backend
+asp.net,backend
+labview,software
