@@ -15,7 +15,7 @@ def calculate_tf_idf_similarity(resume_text, job_text):
 
   vectorizer = TfidfVectorizer(
     stop_words="english",
-    ngram_range=(1, 2),
+    ngram_range=(1, 3),
     max_features=1500
   )
 

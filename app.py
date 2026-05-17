@@ -5,6 +5,11 @@ from src.file_reader import read_uploaded_file
 from src.skill_matcher import compare_skills
 
 from src.similarity import calculate_tf_idf_similarity, calculate_overall_score
+from src.visualization import(
+  plot_score_breakdown,
+  plot_matched_vs_missing,
+  plot_skills_by_category
+)
 
 st.set_page_config(
   page_title="Resume-to-Job Analyzer",
@@ -150,17 +155,55 @@ with st.container(border=True):
             else:
               st.success("No missing skills found.")
 
-            with st.expander("How scoring works"):
+          st.divider()
+          st.subheader("Data Visualizations")
 
-              st.markdown(
-                """
-                **Skill Match Score** checks how many job description skills appear in the resume.
-                
-                **NLP Similarity Score** uses TF-IDF and cosine similarity to compare the overall  wording and context of the resume and job description.
-                
-                **Final Match Score** combines both scores using the selected weight.
-                """
-              )
+          chart_col1, chart_col2 = st.columns(2)
+
+          with chart_col1:
+            score_fig = plot_score_breakdown(
+              results["skill_score"],
+              nlp_score,
+              final_score
+            )
+            st.pyplot(score_fig)
+
+          with chart_col2:
+            matched_missing_fig = plot_matched_vs_missing(
+              results["matched_skills"],
+              results["missing_skills"]
+            )
+            st.pyplot(matched_missing_fig)
+
+          category_col1, category_col2 = st.columns(2)
+
+          with category_col1:
+            matched_category_fig = plot_skills_by_category(
+              results["matched_skills"],
+              skill_df,
+              "Matched Skills by Category"
+            )
+            st.pyplot(matched_category_fig)
+          
+          with category_col2:
+            missing_category_fig = plot_skills_by_category(
+              results["missing_skills"],
+              skill_df,
+              "Missing Skills by Category"
+            )
+            st.pyplot(missing_category_fig)
+
+          with st.expander("How scoring works"):
+
+            st.markdown(
+              """
+              **Skill Match Score** checks how many job description skills appear in the resume.
+              
+              **NLP Similarity Score** uses TF-IDF and cosine similarity to compare the overall  wording and context of the resume and job description.
+              
+              **Final Match Score** combines both scores using the selected weight.
+              """
+            )
 
           with st.expander("Preview Extracted Resume Text"):
             st.write(resume_text[:3000])
