@@ -4,6 +4,8 @@ import pandas as pd
 from src.file_reader import read_uploaded_file
 from src.skill_matcher import compare_skills
 
+from src.similarity import calculate_tf_idf_similarity, calculate_overall_score
+
 st.set_page_config(
   page_title="Resume-to-Job Analyzer",
   page_icon="📄",
@@ -72,8 +74,17 @@ with st.container(border=True):
 with st.container(border=True):
   st.subheader("Step 2: Analyze Skills")
 
+  skill_weight = st.slider(
+      "Skill Match Weight",
+      min_value=0.0,
+      max_value=1.0,
+      value=0.7,
+      step=0.05,
+      help="Controls how much the skill match score contributes to the overall score (vs NLP similarity)."
+  )
+
   if not (resume_file or resume_pasted_text.strip()) or not (job_file or job_pasted_text.strip()):
-    st.warning("Please upload both a resume and a job description to analyze.")
+    st.warning("Please upload both a resume and a job description either in txt, pdf or docx format to analyze.")
   else:
     if st.button("Compare Skills"):
       try:
@@ -82,10 +93,39 @@ with st.container(border=True):
           job_text = read_uploaded_file(job_file) if job_file else job_pasted_text
           results = compare_skills(resume_text, job_text, skill_list)
 
-        st.subheader("Skill Match Score")
-        st.metric(
+          nlp_score = calculate_tf_idf_similarity(resume_text, job_text)
+
+          final_score = calculate_overall_score(
+            results["skill_score"],
+            nlp_score,
+            skill_weight
+          )
+
+        st.subheader("Match Scores")
+
+        score_col1, score_col2, score_col3 = st.columns(3)
+
+        with score_col1:
+          st.metric(
             "Skill Match",
             f'{results["skill_score"]}%'
+          )
+        
+        with score_col2:
+          st.metric(
+            "NLP Similarity",
+            f'{nlp_score}%'
+          )
+        
+        with score_col3:
+          st.metric(
+            "Overall Match",
+            f'{final_score}%'
+          )
+
+        st.caption(
+          f"Overall Match = {int(skill_weight * 100)}% Skill Match + "
+          f"{int((1 - skill_weight) * 100)}% NLP Similarity"
         )
 
         col1, col2 = st.columns(2)
@@ -109,6 +149,18 @@ with st.container(border=True):
               st.error(", ".join(results["missing_skills"]))
             else:
               st.success("No missing skills found.")
+
+            with st.expander("How scoring works"):
+
+              st.markdown(
+                """
+                **Skill Match Score** checks how many job description skills appear in the resume.
+                
+                **NLP Similarity Score** uses TF-IDF and cosine similarity to compare the overall  wording and context of the resume and job description.
+                
+                **Final Match Score** combines both scores using the selected weight.
+                """
+              )
 
           with st.expander("Preview Extracted Resume Text"):
             st.write(resume_text[:3000])
